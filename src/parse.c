@@ -78,9 +78,8 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeeptr, char
 		return STATUS_ERROR;
 	}
 	char *hours = strtok(NULL, ",");
-	if (hours == NULL || atoi(hours) == 0) {
-		return STATUS_ERROR;
-	}
+	if (!hours) return STATUS_ERROR;
+
 	dbhdr->count++;
 	*employeeptr = realloc(*employeeptr, dbhdr->count*(sizeof(struct employee_t)));
 	struct employee_t *employees = *employeeptr;
