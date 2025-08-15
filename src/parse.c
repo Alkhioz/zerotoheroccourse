@@ -65,7 +65,7 @@ void list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
 	}
 }
 
-int add_employee(struct dbheader_t *dbhdr, struct employee_t *employees, char *addstring) {
+int add_employee(struct dbheader_t *dbhdr, struct employee_t **employees, char *addstring) {
 	if (!dbhdr || !employees || !addstring) return STATUS_ERROR;
 	if (dbhdr->count == 0) return STATUS_ERROR;
 	char *name = strtok(addstring, ",");
@@ -74,10 +74,10 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t *employees, char *a
 
 	char *hours = strtok(NULL, ",");
 
-	strncpy(employees[dbhdr->count-1].name, name, sizeof(employees[dbhdr->count-1].name));
-	strncpy(employees[dbhdr->count-1].address, addr, sizeof(employees[dbhdr->count-1].address));
+	strncpy((*employees)[dbhdr->count-1].name, name, sizeof((*employees)[dbhdr->count-1].name));
+	strncpy((*employees)[dbhdr->count-1].address, addr, sizeof((*employees)[dbhdr->count-1].address));
 
-	employees[dbhdr->count-1].hours = atoi(hours);
+	(*employees)[dbhdr->count-1].hours = atoi(hours);
 
 	return STATUS_SUCCESS;
 }
