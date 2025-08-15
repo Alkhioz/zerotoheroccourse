@@ -70,11 +70,11 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t **employees, char *
 	if (!dbhdr || !employees || !addstring) return STATUS_ERROR;
 	if (dbhdr->count == 0) return STATUS_ERROR;
 	char *name = strtok(addstring, ",");
-
+	if (name == NULL) return STATUS_ERROR;
 	char *addr = strtok(NULL, ",");
-
+	if (addr == NULL) return STATUS_ERROR;
 	char *hours = strtok(NULL, ",");
-
+	if (hours == NULL) return STATUS_ERROR;
 	strncpy((*employees)[dbhdr->count-1].name, name, sizeof((*employees)[dbhdr->count-1].name));
 	strncpy((*employees)[dbhdr->count-1].address, addr, sizeof((*employees)[dbhdr->count-1].address));
 
