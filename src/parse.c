@@ -200,9 +200,6 @@ int create_db_header(struct dbheader_t **headerOut) {
 	
 	*headerOut = header;
 	*headerOut = header;
-	if (*headerOut == NULL) {
-        return -1;
-    }
 
 	return STATUS_SUCCESS;
 }
