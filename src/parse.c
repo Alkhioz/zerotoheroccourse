@@ -67,7 +67,7 @@ int list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
 }
 
 int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeeptr, char *addstring) {
-	printf("DB currently has %d\n", dbhdr->count);
+	if (!dbhdr || !employeeptr || !addstring) return STATUS_ERROR;
 	char *name = strtok(addstring, ",");
 	if (name == NULL) {
 		return STATUS_ERROR;
@@ -92,7 +92,6 @@ int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeeptr, char
 
 	return STATUS_SUCCESS;
 }
-
 
 int read_employees(int fd, struct dbheader_t *dbhdr, struct employee_t **employeesOut) {
  	if (fd < 0) {
