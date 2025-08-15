@@ -66,18 +66,23 @@ void list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
 }
 
 int add_employee(struct dbheader_t *dbhdr, struct employee_t *employees, char *addstring) {
-
-	char *name = strtok(addstring, ",");
-
-	char *addr = strtok(NULL, ",");
-
-	char *hours = strtok(NULL, ",");
-
-	strncpy(employees[dbhdr->count-1].name, name, sizeof(employees[dbhdr->count-1].name));
-	strncpy(employees[dbhdr->count-1].address, addr, sizeof(employees[dbhdr->count-1].address));
-
-	employees[dbhdr->count-1].hours = atoi(hours);
-
+	if (!dbhdr || !employees || !addstring) return -1;
+	if (dbhdr->count == 0 || dbhdr->count > MAX_EMPLOYEES) return -1;
+	int idx = (int)(dbhdr->count - 1);
+	char *buf = strdup(addstring);
+    if (!buf) return -1;
+	char *save = NULL;
+    char *name  = strtok_r(buf, ",", &save);
+    char *addr  = name  ? strtok_r(NULL, ",", &save) : NULL;
+    char *hours = addr  ? strtok_r(NULL, ",", &save) : NULL;
+	if (!name || !addr || !hours) { free(buf); return -1; }
+	char *endp = NULL;
+	long h = strtol(hours, &endp, 10);
+	if (endp == hours || *endp != '\0') { free(buf); return -1; }
+	safe_copy(employees[idx].name,    sizeof employees[idx].name,    name);
+    safe_copy(employees[idx].address, sizeof employees[idx].address, addr);
+    employees[idx].hours = (int)h;
+	free(buf);
 	return STATUS_SUCCESS;
 }
 
