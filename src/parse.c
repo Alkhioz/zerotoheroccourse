@@ -66,22 +66,33 @@ int list_employees(struct dbheader_t *dbhdr, struct employee_t *employees) {
 	return STATUS_SUCCESS;
 }
 
-int add_employee(struct dbheader_t *dbhdr, struct employee_t **employees, char *addstring) {
-	if (!dbhdr || !employees || !addstring) return STATUS_ERROR;
-	if (dbhdr->count == 0) return STATUS_ERROR;
+int add_employee(struct dbheader_t *dbhdr, struct employee_t **employeeptr, char *addstring) {
+	printf("DB currently has %d\n", dbhdr->count);
 	char *name = strtok(addstring, ",");
-	if (name == NULL) return STATUS_ERROR;
+	if (name == NULL) {
+		return STATUS_ERROR;
+	}
 	char *addr = strtok(NULL, ",");
-	if (addr == NULL) return STATUS_ERROR;
+	if (addr == NULL) {
+		return STATUS_ERROR;
+	}
 	char *hours = strtok(NULL, ",");
-	if (hours == NULL) return STATUS_ERROR;
-	strncpy((*employees)[dbhdr->count-1].name, name, sizeof((*employees)[dbhdr->count-1].name));
-	strncpy((*employees)[dbhdr->count-1].address, addr, sizeof((*employees)[dbhdr->count-1].address));
+	if (hours == NULL || atoi(hours) == 0) {
+		return STATUS_ERROR;
+	}
+	dbhdr->count++;
+	*employeeptr = realloc(*employeeptr, dbhdr->count*(sizeof(struct employee_t)));
+	struct employee_t *employees = *employeeptr;
 
-	(*employees)[dbhdr->count-1].hours = atoi(hours);
+	strncpy(employees[dbhdr->count-1].name, name, sizeof(employees[dbhdr->count-1].name));
+
+	strncpy(employees[dbhdr->count-1].address, addr, sizeof(employees[dbhdr->count-1].address));
+
+	employees[dbhdr->count-1].hours = atoi(hours);
 
 	return STATUS_SUCCESS;
 }
+
 
 int read_employees(int fd, struct dbheader_t *dbhdr, struct employee_t **employeesOut) {
  	if (fd < 0) {
